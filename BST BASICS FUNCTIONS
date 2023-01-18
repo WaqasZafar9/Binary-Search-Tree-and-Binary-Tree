@@ -1,0 +1,192 @@
+#include <iostream>
+using namespace std;
+
+// Declaring class node
+class node {
+public:
+	int data;
+	node* left;
+	node* right;
+	node(int val) {
+		data = val;
+		left = NULL;
+		right = NULL;
+	}
+  
+  //// INORDER TRAVERSAL////
+	void inorder(node* root) {
+		if (root == NULL) {
+			return;
+		 }
+			inorder(root->left);
+			cout << root->data << " ";
+			inorder(root->right);
+	}
+	
+};
+
+
+///// Checking It is BST OR NOT
+int isbst(node* root) {
+	if (root == NULL) {
+		return 1;
+	}
+	else if(root->left!=NULL&&root->left->data>root->data){
+		return 0;
+	}
+	else if (root->right != NULL && root->right->data < root->data) {
+		return 0;
+	}
+	else {
+		return 1;
+	}
+}
+
+/// Inserting elements in bst using loops
+void insertitrative(node* root, int val) {
+	node* curr = root;
+	node* parent = NULL;
+	if (root == NULL) {
+		root = new node(val);
+		return;
+	}
+	while (curr != NULL) {
+		parent = curr;
+		if (val < curr->data) {
+			curr = curr->left;
+		}
+		else {
+			curr = curr->right;
+		}
+	}
+	if (parent->data>val) {
+		parent->left = new node(val);
+	}
+	else {
+		parent->right = new node(val);
+	}
+
+}
+
+////// taking values from user
+void input(node* root) {
+	int size;
+	cout << " ENTER SIZE: ";
+	cin >> size;
+	int val;;
+	cout << " ENTER DATA: ";
+	for (int i = 0;i <= size;i++) {
+		cin >> val;
+		insertitrative(root, val);
+	}
+}
+
+
+////// inserting elements using recursion
+	node* insertbst(node* root, int d) {
+		if (root == NULL) {
+			root = new node(d);
+			return root;
+		}
+		else if (d == root->data) {
+			cout << "Duplicate cannot be added ";
+		}
+		else if (d > root->data) {
+			root->right = insertbst(root->right, d);
+		}
+		else {
+			root->left = insertbst(root->left, d);
+		}
+		return root;
+	}
+
+//// fun to find minimum value in the bst
+node* minval(node* root) {
+	node* temp = root;
+	while (temp->left != NULL) {
+		temp = temp->left;
+	}
+	return temp;
+}
+
+
+//// searching any element in bst 
+
+bool searchbst(node* root, int key) {
+	if (root == NULL) {
+		return;
+	}
+	while (root != NULL) {
+		if (root->data == key) {
+			return true;
+		}
+		else if (root->data > key) {
+			root = root->left;
+		}
+		else {
+			root = root->right;
+		}
+	}
+	return false;
+  
+}
+
+////checking whether bst or not through recursion
+
+int isBSTUtil(node* root, int min, int max) {
+	{
+		if (root == NULL)
+			return 1;
+		if (root->data < min || root->data > max)
+			return 0;
+		return
+			isBSTUtil(root->left, min, root->data - 1) && isBSTUtil(root->right, root->data + 1, max);
+	}
+}
+int isBST(node* root)
+{
+	return(isBSTUtil(root, INT_MIN, INT_MAX));
+}
+void secondlargest(node* root, int &c) {
+	if (root == NULL || c >= 2) {
+		return;
+	}
+	secondlargest(root->right, c);
+	c++;
+	if (c == 2) {
+		cout << endl;
+		cout <<"2ND LARGEST ELEMENT: " << root->data;
+		cout <<endl<<"count point to: " <<c;
+	}
+	secondlargest(root->left, c);
+}
+void secondlarg(node* root) {
+	int c = 0;
+	secondlargest(root, c);
+}
+
+
+int main() {
+	node* root = new node(5);
+	//insertbst(root, 2);
+	//insertbst(root, 3);
+	//insertbst(root, 6);
+	//insertbst(root, 5);
+    input(root);
+	/*insertitrative(root, 3);
+	insertitrative(root, 6);
+	insertitrative(root, 1);
+	insertitrative(root, 2);*/
+	root->inorder(root);
+	secondlarg(root);
+	cout << endl;
+	if (isbst(root)) {
+		cout << "Is BST";
+	}
+	else {
+		cout << "Not a BST";
+	}
+	cout << endl;
+	cout << "yes available: " << searchbst(root, 6);
+    cout << endl << minval(root) -> data;
+}
