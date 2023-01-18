@@ -1,0 +1,94 @@
+#include<iostream>
+using namespace std;
+class node {
+public:
+	int data;
+	node* left;
+	node* right;
+	node(int val) {
+		data = val;
+		left = NULL;
+		right = NULL;
+	}
+	void inorder(node* root) {
+		if (root == NULL) {
+			return;
+		}
+		inorder(root->left);
+		cout << root->data;
+		inorder(root->right);
+	}
+};
+node* insertbst(node* root, int val) {
+	if (root == NULL) {
+		root = new node(val);
+		return root;
+	}
+	else if (val == root->data) {
+		cout << " DUPLICATE ELEMENTS not allowed ";
+	}
+	else if (val < root->data) {
+		root->left = insertbst(root->left, val);
+	}
+	else {
+		root->right = insertbst(root->right, val);
+	}
+	return root;
+}
+
+//// finding second last element in bst or find second largest element
+void secondlastuntil(node* root, int& c) {
+	if (root == NULL || c >= 2) {
+		return;
+	}
+	secondlastuntil(root->right, c);
+	c++;
+	if (c == 2) {
+		cout << " second last element is: " << root->data;
+	}
+	secondlastuntil(root->left, c);
+}
+void secondlast(node* root) {
+	int c = 0;
+	secondlastuntil(root, c);
+}
+
+
+//////Finding All the leaf nodes
+void leafnodes(node* root)
+{
+	if (root == NULL) {
+		return;
+	}
+	else if (!root->left && !root->right)
+	{
+		cout << " leaf nodes :" << root->data ;
+		return;
+	}
+	else if (root->left) {
+		leafnodes(root->left);
+	}
+	else if (root->right) {
+		leafnodes(root->right);
+	}
+}
+
+
+
+int main() {
+	node* root = new node(8);
+	int n;
+	cout << " ENTER THE SIZE:";
+	cin >> n;
+	int val;
+	for (int i = 0;i <= n;i++) {
+		cout << " ENTER DATA: ";
+		cin >> val;
+		insertbst(root, val);
+	}
+	root->inorder(root);
+	cout << endl;
+	secondlast(root);
+	cout << endl;
+	leafnodes(root);
+}
